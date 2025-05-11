@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthyLife - Tu Asistente de Salud</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/901/901120.png" type="image/png">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md p-6">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-green-600">HealthyLife</h1>
+      <nav class="space-x-4">
+        <a href="#funciones" class="text-gray-600 hover:text-green-600">Funciones</a>
+        <a href="#ia" class="text-gray-600 hover:text-green-600">IA</a>
+        <a href="#contacto" class="text-gray-600 hover:text-green-600">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-r from-green-400 to-blue-500 text-white text-center py-24 px-6">
+    <h2 class="text-4xl font-bold mb-4">Tu Asistente Inteligente de Nutrición y Deporte</h2>
+    <p class="text-xl mb-8">Información fiable. Recomendaciones personalizadas. Tu bienestar, nuestra misión.</p>
+    <a href="#ia" class="bg-white text-green-600 font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-gray-100 transition">
+      Descubre cómo funciona
+    </a>
+  </section>
+
+  <!-- Funciones -->
+  <section id="funciones" class="py-20">
+    <div class="container mx-auto px-6">
+      <h3 class="text-3xl font-bold text-center mb-12">¿Qué puede hacer HealthyLife por ti?</h3>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-green-600 mb-2">Planificación Nutricional</h4>
+          <p>Recibe planes de alimentación personalizados basados en tus objetivos y necesidades.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-green-600 mb-2">Rutinas Deportivas Inteligentes</h4>
+          <p>Entrenamientos adaptados a tu nivel y progresión, con seguimiento de rendimiento.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-green-600 mb-2">Recomendaciones Médicas</h4>
+          <p>Consejos respaldados por estudios científicos y validados por profesionales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IA en acción -->
+  <section id="ia" class="bg-gray-100 py-20">
+    <div class="container mx-auto px-6 text-center">
+      <h3 class="text-3xl font-bold mb-6">Inteligencia Artificial de Última Generación</h3>
+      <p class="max-w-3xl mx-auto mb-8">
+        HealthyLife utiliza modelos de IA entrenados con millones de datos clínicos y deportivos. Nuestra tecnología entiende tus necesidades, aprende de ti y te guía con precisión.
+      </p>
+      <img src="https://cdn-icons-png.flaticon.com/512/3063/3063827.png" alt="IA saludable" class="mx-auto w-32 opacity-80" />
+    </div>
+  </section>
+
+<!-- Interacción con la IA -->
+<section id="chat-ia" class="bg-white py-20">
+  <div class="container mx-auto px-6 max-w-3xl">
+    <h3 class="text-3xl font-bold mb-6 text-center text-green-600">Habla con HealthyLife</h3>
+    <div class="border rounded-lg shadow-md p-6 bg-gray-50 flex flex-col h-[500px]">
+      <div id="chat-window" class="flex-1 overflow-y-auto space-y-4 mb-4 px-2" style="scroll-behavior: smooth;">
+        <!-- Mensajes aparecerán aquí -->
+      </div>
+      <form id="chat-form" class="flex gap-2">
+        <input type="text" id="user-input" placeholder="Escribe tu pregunta..." class="flex-1 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400" required />
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500 transition">Enviar</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('user-input');
+  const chatWindow = document.getElementById('chat-window');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    // Mostrar mensaje del usuario
+    addMessage('Tú', userText, 'text-right text-green-700');
+
+    input.value = '';
+
+    // Aquí iría la llamada real a la IA. Por ahora, simulamos respuesta.
+    setTimeout(() => {
+      const response = simulateAIResponse(userText);
+      addMessage('HealthyLife', response, 'text-left text-blue-700');
+    }, 800);
+  });
+
+  function addMessage(sender, text, alignment) {
+    const message = document.createElement('div');
+    message.className = alignment;
+    message.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatWindow.appendChild(message);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+async function simulateAIResponse(text) {
+  try {
+    const res = await fetch('http://localhost:3000/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    return data.reply;
+  } catch (err) {
+    return 'Lo siento, no pude obtener una respuesta en este momento.';
+  }
+}
+
+</script>
+
+  
+  <!-- Contacto -->
+  <section id="contacto" class="py-20">
+    <div class="container mx-auto px-6 max-w-xl text-center">
+      <h3 class="text-3xl font-bold mb-4">¿Quieres ser parte de HealthyLife?</h3>
+      <p class="mb-6">Déjanos tu correo para recibir noticias, acceso anticipado y mucho más.</p>
+      <form class="flex flex-col sm:flex-row gap-4 justify-center">
+        <input type="email" placeholder="Tu email" class="flex-1 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400" required>
+        <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-500 transition">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t py-6 text-center text-sm text-gray-500">
+    © 2025 HealthyLife. Todos los derechos reservados.
+  </footer>
+
+</body>
+</html>
+
+
+
